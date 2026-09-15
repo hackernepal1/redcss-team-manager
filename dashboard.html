@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedCSS Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo">RedCSS Admin</div>
+
+  <button id="logout" class="danger">Logout</button>
+</header>
+
+<main class="container">
+
+  <h1>Team Dashboard</h1>
+
+  <section class="admin-box">
+
+    <h2>Add / Edit Member</h2>
+
+    <form id="memberForm">
+
+      <input type="hidden" id="memberDbId">
+
+      <input id="memberId" placeholder="Member ID e.g. RC-001" required>
+      <input id="name" placeholder="Full Name" required>
+      <input id="username" placeholder="Username">
+
+      <input id="role" placeholder="Role" required>
+      <input id="department" placeholder="Department">
+
+      <input id="email" type="email" placeholder="Email">
+      <input id="phone" placeholder="Phone">
+      <input id="location" placeholder="Location">
+
+      <input id="joinDate" type="date">
+
+      <input id="skills" placeholder="Skills separated by commas">
+
+      <input id="photo" placeholder="Profile photo URL">
+
+      <input id="github" placeholder="GitHub URL">
+      <input id="linkedin" placeholder="LinkedIn URL">
+      <input id="facebook" placeholder="Facebook URL">
+      <input id="instagram" placeholder="Instagram URL">
+      <input id="portfolio" placeholder="Portfolio URL">
+
+      <select id="status">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+
+      <textarea id="bio" placeholder="Short bio"></textarea>
+
+      <button type="submit">Save Member</button>
+      <button type="button" id="cancelEdit" class="secondary">
+        Clear
+      </button>
+
+    </form>
+
+    <p id="message"></p>
+
+  </section>
+
+  <section>
+    <h2>Members</h2>
+    <div id="members" class="admin-list"></div>
+  </section>
+
+</main>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
