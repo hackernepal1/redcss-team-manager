@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedCSS Team</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo">RedCSS</div>
+
+  <nav>
+    <a href="/">Team</a>
+    <a href="/login.html">Admin</a>
+  </nav>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <p class="tag">RED CSS TEAM</p>
+    <h1>Meet Our Team</h1>
+    <p>Explore the people working with RedCSS.</p>
+  </section>
+
+  <div class="tools">
+    <input
+      type="search"
+      id="search"
+      placeholder="Search team member..."
+    >
+
+    <select id="roleFilter">
+      <option value="">All Roles</option>
+    </select>
+  </div>
+
+  <section id="members" class="grid">
+    Loading...
+  </section>
+
+</main>
+
+<script>
+const membersContainer = document.getElementById("members");
+const searchInput = document.getElementById("search");
+const roleFilter = document.getElementById("roleFilter");
+
+let members = [];
+
+async function loadMembers() {
+  const response = await fetch("/api/members");
+  const data = await response.json();
+
+  members = data.members || [];
+
+  const roles = [...new Set(members.map(m => m.role).filter(Boolean))];
+
+  roleFilter.innerHTML =
+    '<option value="">All Roles</option>' +
+    roles.map(role => `<option value="${escapeHtml(role)}">${escapeHtml(role)}</option>`).join("");
+
+  render();
+}
+
+function render() {
+  const search = searchInput.value.toLowerCase();
+  const role = roleFilter.value;
+
+  const filtered = members.filter(member => {
+    const matchesSearch =
+      member.name.toLowerCase().includes(search) ||
+      (member.username || "").toLowerCase().includes(search) ||
+      (member.skills || []).join(" ").toLowerCase().includes(search);
+
+    const matchesRole =
+      !role || member.role === role;
+
+    return matchesSearch && matchesRole;
+  });
+
+  if (!filtered.length) {
+    membersContainer.innerHTML = "<p>No members found.</p>";
+    return;
+  }
+
+  membersContainer.innerHTML = filtered.map(member => `
+    <article class="card">
+
+      <img
+        class="avatar"
+        src="${escapeAttribute(member.photo || "https://via.placeholder.com/150")}"
+        alt="${escapeAttribute(member.name)}"
+      >
+
+      <h2>${escapeHtml(member.name)}</h2>
+
+      <p class="role">${escapeHtml(member.role)}</p>
+
+      <p>${escapeHtml(member.bio || "RedCSS Team Member")}</p>
+
+      <a class="button" href="/member.html?id=${encodeURIComponent(member._id)}">
+        View Profile →
+      </a>
+
+    </article>
+  `).join("");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value);
+}
+
+searchInput.addEventListener("input", render);
+roleFilter.addEventListener("change", render);
+
+loadMembers();
+</script>
+
+</body>
+</html>
